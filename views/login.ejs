@@ -110,8 +110,13 @@
     <div id="case-cond" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <div class="panel-title">Please Review the case</div>
-                <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Review</a></div>
+                <div id="logged-in-as" style="float:right; font-size: 85%; position: relative; top:-10px">
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">Please Review the Case</div>
             </div>
         </div>
         <div class="disp-body">
@@ -124,34 +129,33 @@
             </div>
           </div>
 
+          <div class="panel panel-info">
+              <div class="panel-heading">
+                  <div class="panel-title">Select Condition</div>
+              </div>
+          </div>
+
           <div class="list-group">
+            <!--
             <a href="#" class="list-group-item list-group-item-action">Cras justo odio</a>
             <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
             <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
             <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
             <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
-
+          -->
             <!-- Button -->
-            <div class="col-md-offset-3 col-md-9">
+            <!--div class="col-md-offset-3 col-md-9">
                 <button id="btn-prev" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Prev Case</button>
                 <button id="btn-next" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Next Case</button>
-            </div>
+            </div-->
 
           </div>
 
+          <div class="col-md-offset-3 col-md-9">
+              <button id="btn-prev" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Prev Case</button>
+              <button id="btn-next" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Next Case</button>
+          </div>
 
-          <!-- div class="cond-body">
-
-              <div class="cond-list">
-
-              </div>
-              <div class="col-md-offset-3 col-md-9">
-                  <button id="btn-prev" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Prev Case</button>
-                  <button id="btn-next" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Next Case</button>
-              </div>
-
-
-          </div -->
 
         </div>
 
