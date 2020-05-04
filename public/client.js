@@ -4,6 +4,7 @@ $(document).ready(function(){
     let userId = $("#login-username").val();
     let passwd = $("#login-password").val();
     console.log('button was clicked: userId: ', userId, 'passwd: ', passwd);
+    localStorage.setItem('listId', "-1");
 
     $.post("/api/login",
     {
@@ -34,11 +35,13 @@ $(document).ready(function(){
   });
 
   $("#btn-next").click(function(){
-    console.log('btn-next clicked');
+    listId = localStorage.getItem('listId');
+    console.log('btn-next clicked: localstorage[listId] = ', listId);
 
   });
 
   $("#btn-prev").click(function(){
+    listId = localStorage.getItem('listId');
     console.log('btn-prev clicked');
 
   });
@@ -46,8 +49,28 @@ $(document).ready(function(){
   // To get the index postion of the list item that has been clicked
   // The list item has been generated dymnamically by jQuery
   $(".list-group").on("click", "a", function(){
+    prevListIdxPos = localStorage.getItem('listIdIdx');
+    console.log('prevListIdxPos: ', prevListIdxPos)
+    if (prevListIdxPos) {
+      let listItems = $(".list-group-item");
+      listItems[prevListIdxPos].classList.remove("active");
+    }
+
+    // Select all list items - and then remove active
+    //let listItems = $(".list-group-item");
+    //console.log('listItems: ', listItems);
+    // Remove 'active' tag for all list items
+    //for (let i = 0; i < listItems.length; i++) {
+        //listItems[i].classList.remove("active");
+    //}
+
     let indexPos = $(this).index();
-    console.log('list-group clicked: index = ', indexPos);
+    let listId   = $(this).attr('id');
+    localStorage.setItem('listId', listId);
+    localStorage.setItem('listIdIdx', indexPos);
+    console.log('list-group clicked: index = ', indexPos, 'id: ', listId);
+    //$('.list-group.active').removeClass("active");
+    $(this).addClass("active");
   });
 
 
@@ -57,9 +80,8 @@ $(document).ready(function(){
     $("#case-cond").hide();
     $("#signupbox").hide();
     $(".container").show();
-    $("#login-username").val('');
-    $("#login-password").val('');
-    //$("#loginbox").show();
+    //$("#login-username").val('');
+    //$("#login-password").val('');
   });
 
 });
