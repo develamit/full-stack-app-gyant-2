@@ -43,8 +43,11 @@ $(document).ready(function(){
 
   });
 
-  $('.list-group').click(function(){
-    console.log('list-group clicked');
+  // To get the index postion of the list item that has been clicked
+  // The list item has been generated dymnamically by jQuery
+  $(".list-group").on("click", "a", function(){
+    let indexPos = $(this).index();
+    console.log('list-group clicked: index = ', indexPos);
   });
 
 
