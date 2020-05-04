@@ -1,0 +1,14 @@
+#--------------------------
+# Files to ignore
+#--------------------------
+.DS_Store
+package-lock.json
+*~
+*bk*
+#
+#--------------------------
+# Directories to ignore
+#--------------------------
+node_modules/
+logs/
+__pycache__/
