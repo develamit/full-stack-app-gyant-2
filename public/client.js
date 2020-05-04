@@ -20,6 +20,7 @@ $(document).ready(function(){
         $("#case-cond").show();
         $("#case-quote").html(data.cases.caseDesc);
         $("#logged-in-as").html('Logged in as: ' + userId + ' | <a href="#" id="log-out-id" class="log-out-class">Log Out</a>');
+        //$("#logged-in-as").html('Logged in as: ' + userId + ' | <button id="log-out-id" type="button" class="btn btn-info"><i class="icon-hand-right"></i>Log Out</button>');
 
         $.each( data.conditions, function( index, value ){
           console.log(value.code, " : ", value.desc);
@@ -32,26 +33,30 @@ $(document).ready(function(){
     });
   });
 
+  $("#btn-next").click(function(){
+    console.log('btn-next clicked');
 
-  //$("#log-out-id").click(function(){
-    //console.log('log out clicked');
-    //$("#case-cond").hide();
-    //$("#signupbox").hide();
-    //$("#loginbox").show();
-  //});
+  });
 
-  //$("#log-out-id").on("click", function(){
-    //console.log('log out clicked');
-    //$("#case-cond").hide();
-    //$("#signupbox").hide();
-    //$("#loginbox").show();
-  //});
+  $("#btn-prev").click(function(){
+    console.log('btn-prev clicked');
 
-  $('.log-out-class').attr("onclick", function(){
+  });
+
+  $('.list-group').click(function(){
+    console.log('list-group clicked');
+  });
+
+
+  // To capture click events on dynamically created elements by jQuery
+  $("div").on("click", "a#log-out-id", function(){
     console.log('log out clicked');
     $("#case-cond").hide();
     $("#signupbox").hide();
-    $("#loginbox").show();
+    $(".container").show();
+    $("#login-username").val('');
+    $("#login-password").val('');
+    //$("#loginbox").show();
   });
 
 });
