@@ -3,6 +3,7 @@ $(document).ready(function(){
 
   //=======================================================================
   // jQuery function when login button is clicked
+  //   0. Calls the api /api/login
   //   1. Verifies the admin userId
   //   2. Takes to the case, condition page
   //   3. Registers all the conditions in localStorage - ONE TIME
@@ -82,7 +83,11 @@ $(document).ready(function(){
 
 
   //=======================================================================
-  // jQuery function when login button is clicked
+  // jQuery function when next button is clicked
+  // 1. Deselects the current selection from the list-item
+  // 2. Calls the api /api/nextcase
+  // 3. Receives the next case as a response
+  // 4. Maps the pre-selected code for this case to the corresponding list-item
   //=======================================================================
   $("#btn-next").click(function(){
     listId = localStorage.getItem('listId');
@@ -181,10 +186,11 @@ $(document).ready(function(){
   $("div").on("click", "a#log-out-id", function(){
     console.log('log out clicked');
     $("#case-cond").hide();
+    $("#done-cond").hide();
     $("#signupbox").hide();
     $(".container").show();
-    $("#login-username").val('');
-    $("#login-password").val('');
+    //$("#login-username").val('');
+    //$("#login-password").val('');
   });
 
 });
