@@ -133,65 +133,56 @@
     <!-- PAGE - todisplay cases and conditions -->
     <!-- ================================================= -->
     <div id="case-cond" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <div id="logged-in-as" style="float:right; font-size: 85%; position: relative; top:-10px">
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <div class="panel-title">Please Review the Case</div>
-            </div>
-        </div>
+      <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand">Health record labeling</a>
+        <div id="logged-in-as" class="text-white" style="float:right; font-size: 85%; position: relative;"></div>
+        <!--button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log Out</button-->
+
+      </nav>
+
 
         <div class="disp-body">
 
           <div class="card-deck">
 
-            <div id="case-quote1" class="card" style="max-height: 500px;">
+            <div id="case-quote1" class="card" style="max-width: 700px; max-height: 500px;">
               <div class="card-header text-white bg-secondary mb-3">Please Review the Case</div>
               <div class="card-body overflow-auto bg-light mb-3">
                 <blockquote id="case-quote" class="blockquote mb-0">
                   <!-- populate the case history here -->
                 </blockquote>
               </div>
-              <!--div class="card-footer text-white bg-secondary mb-3">Footer</div-->
+              <div id="case-footer" class="card-footer text-warning bg-secondary mb-3" style="font-size: 75%; position: relative;"></div>
             </div>
 
-            <div id="lg-id" class="card" style="max-height: 500px;">
+            <div id="lg-id" class="card" style="max-width: 700px; max-height: 500px;">
               <div class="card-header text-white bg-secondary mb-3">Select Condition</div>
+              <!-- populate the list here from jquery -->
               <div class="list-group overflow-auto bg-light mb-3">
               </div>
             </div>
 
-        </div>
+          </div> <!-- card-deck ends -->
 
 
-
-          <!-- populate the list here from jquery -->
-          <!--
-          <div class="panel panel-info">
-              <div class="panel-heading">
-                  <div class="panel-title">Select Condition</div>
-              </div>
-          </div>
-
-          <div id="lg-id" class="overflow-auto" style="max-height: 500px;">
-            <div class="list-group">
-            </div>
-          </div>
-          -->
-
-          <div class="col-md-offset-3 col-md-9">
-              <button id="btn-prev" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Prev Case</button>
+          <div class="col-md-offset-3 col-md-9" style="margin-top:50px">
+              <!--button id="btn-prev" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Prev Case</button-->
               <button id="btn-next" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Next Case</button>
           </div>
 
-
-        </div>
-
     </div>
+
+
+    <!-- ================================================= -->
+    <!-- PAGE - to display Done message -->
+    <!-- ================================================= -->
+    <div id="done-cond" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <div class="card">
+        <div id="card-done-id" class="card-header bg-light mb-3"></div>
+      </div>
+    </div>
+
+
 
     <script src="client.js"></script>
 

@@ -99,9 +99,9 @@ app.post("/api/login", (request, response) => {
             return response.status(500).send(error);
           }
 
-          let userData       = results[0]; //getResult(results[0]);
-          let casesData      = results[1]; //getTable(results[1]);
-          let conditionsData = results[2]; //getTable(results[2]);
+          let userData       = results[0];
+          let casesData      = results[1];
+          let conditionsData = results[2];
 
           console.log('userData: ', userData);
           console.log('casesData: ', casesData);
@@ -111,8 +111,6 @@ app.post("/api/login", (request, response) => {
             if(res) {
               console.log('passwd match');
               response.send({"cases" : casesData, "conditions" : conditionsData});
-              //response.send([casesData, conditionsData]);
-              //response.send(casesData);
             }
           });
 
@@ -125,51 +123,55 @@ app.post("/api/login", (request, response) => {
   });
 
 
+// This does 2 mongoDB tasks:
+//        1. Record the condition for the current case
+//        2. Send the next case to FE
+app.post("/api/nextcase", (request, response) => {
+    console.log('/api/nextcase request body: ', request.body);
+    const curSeq = parseInt(request.body.curSeq, 10);
+    const curCond = request.body.curCond;
+    const nextSeq = curSeq + 1;
+    let curQuery = {"seq" : curSeq};
+    let newValues = { $set: {code: curCond} };
+    let queryStr = {"seq" : nextSeq};
+    console.log('curSeq: ', curSeq, 'curCond:', curCond, 'nextSeq: ', nextSeq);
 
-app.post("/api/login2", (request, response) => {
-    console.log('/api/login request body: ', request.body);
-    const userId = request.body.userId;
-    const plainPasswd = request.body.passwd;
-    let queryStr = {"userId" : userId};
-    let projection = {"passwd" : 1};
-
-    collectionUser.findOne(queryStr, (error, result) => {
-        if(error) {
-            return response.status(500).send(error);
-        }
-        else {
-          if (result) {
-            //console.log('result: ', result);
-            // compare the passwords
-            bcrypt.compare(plainPasswd, result.passwd, function(err, res) {
-              if(res) {
-                console.log('passwd match');
-                //response.render('home', {name:'Akashdeep'});
-
-                // get the first case, and also all the conditions
-                collectionCases.findOne({}, (error, result) => {
-                    if(error) {
-                        return response.status(500).send(error);
-                    }
-                    response.send(result);
-                });
+    let queries = [
+        collectionCases.updateOne(curQuery, newValues),
+        collectionCases.findOne(queryStr)
+      ];
 
 
-              } else {
-                console.log('passwd did not match');
-                return response.status(401).send({ message: "The password is incorrect!" });
-              }
-           });
-         }
-         else{
-           console.log('Cannot find user: ', userId);
-           return response.status(401).send({ message: "Cannot find user:", userId });
-         }
-       }
+      Promise.all(queries)
+        .then(results => {
+          if (!results[0]) {
+            console.log("Update did not happen during updateOne operation");
+            //response.send({"cases" : null});
+          } else if (!results[1]) {
+            console.log("Cases not found during findOne operation");
+            //response.send({"cases" : null});
+          }
 
-    });
+          let updateResult       = results[0];
+          let casesData          = results[1];
+          console.log("casesData: ", casesData);
+
+          if (casesData) {
+            response.send({"cases" : casesData});
+          } else {
+            response.send({"cases" : null});
+          }
+
+        })
+        .catch(err => {
+          console.log("Error in updating and getting next case, error code: ", err);
+          //response.send({"cases" : null});
+          return response.status(500).send(err);
+        });
 
 });
+
+
 
 app.get("/api/cases", (request, response) => {
     collectionCases.find({}).toArray((error, result) => {
