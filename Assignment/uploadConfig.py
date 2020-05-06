@@ -16,5 +16,4 @@ SEQUENCE_START = 0
 
 
 # Timezone
-import pytz
-TZ = pytz.timezone('US/Pacific')
+TZ = 'US/Pacific'

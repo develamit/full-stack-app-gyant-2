@@ -180,7 +180,7 @@ app.post("/api/nextcase", (request, response) => {
     const curCond = request.body.curCond;
     const nextSeq = curSeq + 1;
     let modDate = request.body.modifiedOn;
-    
+
     let queryStr = {"seq" : nextSeq};
     let curQuery = {"seq" : curSeq};
     let newValues = { $set: {code: curCond} };
@@ -224,28 +224,6 @@ app.post("/api/nextcase", (request, response) => {
         });
 
 });
-
-
-/* DELETE LATER
-app.get("/api/cases", (request, response) => {
-    collectionCases.find({}).toArray((error, result) => {
-        if(error) {
-            return response.status(500).send(error);
-        }
-        response.send(result);
-    });
-});
-
-
-app.get("/api/conditions", (request, response) => {
-    collectionConditions.find({}).toArray((error, result) => {
-        if(error) {
-            return response.status(500).send(error);
-        }
-        response.send(result);
-    });
-});
-*/
 
 
 app.use('/api', router);

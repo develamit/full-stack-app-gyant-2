@@ -21,6 +21,7 @@ class accessDB:
         print('seq init: {}'.format(self.seq))
         #self.logger = None
         self.conditionFile = CONDITION_FILE
+        self.TZ = pytz.timezone(TZ)
         self.client = MongoClient('mongodb://' + self.host + ':' + str(self.port) + '/')
         self.db = self.client[self.dbName]
         self.condColl = self.db['conditions']
@@ -121,7 +122,7 @@ class accessDB:
                 elif ret['desc'] != item['desc']:
                     print('Update this record: {}'.format(item))
                     sequence_num = self.sequence_start
-                    timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+                    timeL = str(datetime.now(tz=self.TZ).timestamp() * 1000).split('.') # milliseconds
                     modTime = float(timeL[0]) + sequence_num
 
                     query = { "code": ret['code'] }
@@ -163,7 +164,7 @@ class accessDB:
                 # Insert the record if not found
                 if not ret:
                     print('Insert the record from file: {}'.format(fileName))
-                    timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+                    timeL = str(datetime.now(tz=self.TZ).timestamp() * 1000).split('.') # milliseconds
                     curTime = float(timeL[0]) + sequence_num
                     d = {}
                     d['caseId']   = curTime
@@ -183,7 +184,7 @@ class accessDB:
                 elif ret['caseDesc'] != data:
                     print('Update the case desc from file: {}'.format(fileName))
                     sequence_num = self.sequence_start
-                    timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+                    timeL = str(datetime.now(tz=self.TZ).timestamp() * 1000).split('.') # milliseconds
                     modTime = float(timeL[0]) + sequence_num
 
                     query = { "fileName": ret['fileName'] }
@@ -222,7 +223,7 @@ class accessDB:
         if not ret:
             print('Insert the sequence record')
 
-            timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+            timeL = str(datetime.now(tz=self.TZ).timestamp() * 1000).split('.') # milliseconds
             curTime = float(timeL[0]) + sequence_num
             d = {}
             d['id']       = curTime
@@ -266,7 +267,7 @@ class accessDB:
             ret2 = None
             print('Update the seq with : {}'.format(seq))
             sequence_num = self.sequence_start
-            timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+            timeL = str(datetime.now(tz=self.TZ).timestamp() * 1000).split('.') # milliseconds
             modTime = float(timeL[0]) + sequence_num
 
             query = { "seq": self.seq }
