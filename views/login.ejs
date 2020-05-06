@@ -1,32 +1,30 @@
 <!DOCTYPE html>
-<!-- Attribute: https://bootsnipp.com/snippets/2X0r -->
+<!-- Attributes: -->
 <!--            https://getbootstrap.com/docs/4.4/getting-started/introduction/ -->
 <!--            https://code.jquery.com/jquery/ -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!--meta name="viewport" content="width=device-width, initial-scale=1.0" -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Health Record Labeling Tool</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <!--link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"-->
-  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"-->
   <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/32a73fbd75.js" crossorigin="anonymous"></script>
-
-
 </head>
 
 <body>
 
-    <!-- ================================================= -->
-    <!-- PAGE - todisplay login and signup -->
-    <!-- ================================================= -->
+    <!-- =================================================== -->
+    <!-- PAGE - to display login and signup inside container -->
+    <!-- =================================================== -->
     <div class="container">
 
+      <!------------------------------>
+      <!-- PAGE - to display login -->
+      <!------------------------------>
       <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6">
 
         <div class="panel panel-info">
@@ -81,68 +79,69 @@
       </div> <!-- loginbox div -->
 
 
-        <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-9">
+      <!------------------------------>
+      <!-- PAGE - to display signup -->
+      <!------------------------------>
+      <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-9">
 
-          <div class="panel panel-info">
+        <div class="panel panel-info">
 
-            <div class="panel-heading mainbox col-md-6">
-              <div class="panel-title text-warning">Register</div>
-              <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#login-result-id').hide(); $('#loginbox').show()">Sign In</a></div>
-            </div>
-
-            <div style="padding-top:10px" class="panel-body" >
-
-              <form id="signupform" class="form-horizontal" role="form">
-
-                <div style="margin-bottom: 25px" class="form-group">
-                  <div class="col-md-6">
-                    <i class="fas fa-user fa-2x"></i>
-                    <input id="signup-username" type="text" class="form-control" name="userId" placeholder="username">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <div class="col-md-6">
-                    <i class="fas fa-lock fa-2x"></i>
-                    <input id="signup-password" type="password" class="form-control" name="passwd" placeholder="Password">
-                  </div>
-                </div>
-
-                <div class="form-group text-left">
-                  <!-- Button -->
-                  <div class="col-md-offset-3 col-md-9">
-                    <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i>Sign Up</button>
-                  </div>
-                </div>
-
-              </form>
-
-            </div> <!-- panel-body -->
-
-          </div> <!-- panel -->
-
-          <div class="card mainbox col-md-6 border-0">
-            <div id="signup-result-id" class="card-body"></div>
+          <div class="panel-heading mainbox col-md-6">
+            <div class="panel-title text-warning">Register</div>
+            <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#login-result-id').hide(); $('#loginbox').show()">Sign In</a></div>
           </div>
 
-        </div> <!-- signupbox -->
+          <div style="padding-top:10px" class="panel-body" >
+
+            <form id="signupform" class="form-horizontal" role="form">
+
+              <div style="margin-bottom: 25px" class="form-group">
+                <div class="col-md-6">
+                  <i class="fas fa-user fa-2x"></i>
+                  <input id="signup-username" type="text" class="form-control" name="userId" placeholder="username">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-6">
+                  <i class="fas fa-lock fa-2x"></i>
+                  <input id="signup-password" type="password" class="form-control" name="passwd" placeholder="Password">
+                </div>
+              </div>
+
+              <div class="form-group text-left">
+                <!-- Button -->
+                <div class="col-md-offset-3 col-md-9">
+                  <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i>Sign Up</button>
+                </div>
+              </div>
+
+            </form>
+
+          </div> <!-- panel-body -->
+
+        </div> <!-- panel -->
+
+        <div class="card mainbox col-md-6 border-0">
+          <div id="signup-result-id" class="card-body"></div>
+        </div>
+
+      </div> <!-- signupbox -->
 
     </div> <!-- container div -->
 
 
 
     <!-- ================================================= -->
-    <!-- PAGE - todisplay cases and conditions -->
-    <!-- ================================================= #e3f2fd #cddaab #729ab7-->
+    <!-- PAGE - to display cases and conditions -->
+    <!-- ================================================= -->
     <div class="row d-flex justify-content-center">
       <div class="col-md-10">
 
         <div id="case-cond" style="display:none; margin-top:50px" class="mainbox col-md-10">
           <nav class="navbar navbar-light" style="background-color: #e9e9e9;">
             <i class="fas fa-notes-medical fa-2x"></i>
-            <!--a class="navbar-brand">Health record labeling</a-->
             <div id="logged-in-as" class="text-dark" style="float:right; font-size: 85%; position: relative;"></div>
-            <!--button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log Out</button-->
           </nav>
 
           <div class="disp-body">
@@ -152,7 +151,7 @@
                 <div class="card-header text-white bg-secondary mb-3">Please Review the Case</div>
                 <div class="card-body overflow-auto bg-light mb-3">
                   <blockquote id="case-quote" class="blockquote mb-0">
-                    <!-- populate the case history here -->
+                    <!-- populate the case history here from jQuery-->
                   </blockquote>
                 </div>
                 <div id="case-footer" class="card-footer text-warning bg-secondary mb-3" style="font-size: 75%; position: relative;"></div>
@@ -160,7 +159,7 @@
 
               <div id="lg-id" class="card" style="max-height: 500px;">
                 <div class="card-header text-white bg-secondary mb-3">Select Condition</div>
-                <!-- populate the list here from jquery -->
+                <!-- populate the condition list here from jQuery -->
                 <div class="list-group overflow-auto bg-light mb-3">
                 </div>
               </div>
@@ -169,7 +168,6 @@
 
 
             <div class="text-right col-md-10" style="margin-top:50px">
-                <!--button id="btn-prev" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Prev Case</button-->
                 <button id="btn-next" type="button" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Next Case</button>
             </div>
 

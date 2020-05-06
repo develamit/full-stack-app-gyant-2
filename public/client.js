@@ -22,7 +22,6 @@ $(document).ready(function(){
       console.log("Signup data: ", data);
 
       if (data == 'created') {
-        //$("#signup-result-id").html('Registration successful. Please Sign In');
         $("#signup-result-id").html('<a href="#" id="sign-in-id" class="log-out-class">Registration successful. Please Sign In</a>');
       } else if (data == 'exists') {
         $("#signup-result-id").html('User exists. Please try a different userId');
@@ -73,15 +72,19 @@ $(document).ready(function(){
         //console.log("caseDesc: ", data.cases.caseDesc);
         //console.log("conditions: ", data.conditions);
         let caseCode = data.cases.code; // Get the code associated with the case
-        let caseId = Math.trunc(data.cases.caseId * 1000);
-        let lastModified = Math.trunc(data.cases.lastModified * 1000);
-        let lastModDate = ""
+        let lastModified = data.cases.lastModified;
+        let caseId = data.cases.caseId;
+        let d = new Date(caseId);
+        let dataCreatedOn = d.toLocaleString();
+        console.log('Case created on: ', dataCreatedOn, 'lastModified: ', lastModified, typeof lastModified);
+        //let lastModified = Math.trunc(data.cases.lastModified * 1000);
+        //let lastModDate = ""
         //if (caseId != lastModified) {
-          let d = new Date(lastModified);
-          lastModDate = d.toLocaleString();
-          console.log('Case last modified on: ', lastModDate);
+          //let d = new Date(lastModified);
+          //lastModDate = d.toLocaleString();
+          //console.log('Case last modified on: ', lastModDate);
         //}
-        console.log('type: ', caseId, lastModified)
+        //console.log('caseId: ', caseId, 'lastModified: ', lastModified)
         console.log('caseCode: ', caseCode);
         if (status) {
           $(".container").hide();
@@ -89,9 +92,18 @@ $(document).ready(function(){
           $("#btn-next").attr('disabled', false);
           $("#done-cond").hide();
           $("#case-quote").html(data.cases.caseDesc);
-          $("#case-footer").html('Case Id: ' + data.cases.caseId + ' Sequence: ' + data.cases.seq);
+
+          if (lastModified == -1) {
+            $("#case-footer").html('Case Id: ' + data.cases.caseId + ' Sequence: ' + data.cases.seq + '<br>' + 'Case created on: ' + dataCreatedOn);
+
+          } else {
+            let d1 = new Date(lastModified);
+            let dataModifiedOn = d1.toLocaleString();
+            console.log('Case modified on: ', dataModifiedOn);
+            $("#case-footer").html('Case Id: ' + data.cases.caseId + ' Sequence: ' + data.cases.seq + '<br>' + 'Case modified on: ' + dataModifiedOn);
+          }
+
           $("#logged-in-as").html('Logged in as: ' + userId + ' | <a href="#" id="log-out-id" class="log-out-class">Log Out</a>');
-          //$("#logged-in-as").html('Logged in as: ' + userId + ' | <button id="log-out-id" type="button" class="btn btn-info"><i class="icon-hand-right"></i>Log Out</button>');
 
           // store the case sequence number in local storage
           localStorage.setItem('caseIdSeqNum', data.cases.seq);
@@ -165,45 +177,69 @@ $(document).ready(function(){
     }
 
     // extract the last modified time for the current case
-    let lastModified = Number(localStorage.getItem(curCaseSeqNum));
-    console.log('lastModified2: ', lastModified, typeof lastModified);
-    if (isNaN(lastModified)) {
-      console.log('lastModified2 is NaN');
+    let prevCaseModified = Number(localStorage.getItem(curCaseSeqNum));
+    console.log('prevCaseModified: ', prevCaseModified, typeof prevCaseModified);
+    //prevModDate = "";
+    if (isNaN(prevCaseModified)) {
+      console.log('Current Case:', curCaseSeqNum, 'prevCaseModified is NaN');
+      prevCaseModified = "";
     } else {
-      let d = new Date(lastModified);
-      lastModDate = d.toLocaleString();
-      console.log('Current Case last modified on: ', lastModDate);
+      //let d = new Date(prevCaseModified);
+      //prevModDate = d.toLocaleString();
+      console.log('Current Case:', curCaseSeqNum, 'current case modified on: ', prevCaseModified);
     }
 
     $.post("/api/nextcase",
     {
       curSeq: curCaseSeqNum,
-      curCond: listId
+      curCond: listId,
+      modifiedOn: prevCaseModified
     },
     function(data, status){
       console.log("Next Status: ", status);
       if (data.cases) {
         console.log("cases: ", data.cases);
 
-        // Show any pre-seleced code in the conditions - from a previous entry attempt
+        // Show any pre-seleced condition for this case - entered from a previous attempt
         let caseCode = data.cases.code; // Get the code associated with the case
-        if (caseCode != "-1") {
+        let lastModified = data.cases.lastModified; // get the lastModified time for this case
+
+        // obtain case creation time from caseId
+        let caseId = data.cases.caseId;
+        let d = new Date(caseId);
+        let dataCreatedOn = d.toLocaleString();
+        console.log('Case created on: ', dataCreatedOn);
+
+        if (caseCode != "-1") { // condition has been selected for this case, in a previous attempt
           let codeIdx = localStorage.getItem(caseCode);
           if (codeIdx) {
             let listItems = $(".list-group-item");
-            listItems[codeIdx].classList.add("active");
+            listItems[codeIdx].classList.add("active"); // make the list-item active from the previous selection
             localStorage.setItem('listId', caseCode);
             localStorage.setItem('listIdIdx', codeIdx);
           }
         }
 
         $("#case-quote").html(data.cases.caseDesc);
-        $("#case-footer").html('Case Id: ' + data.cases.caseId + ' Sequence: ' + data.cases.seq);
+
+        if (lastModified == -1) {
+          $("#case-footer").html('Case Id: ' + data.cases.caseId + ' Sequence: ' + data.cases.seq + '<br>' + 'Case created on: ' + dataCreatedOn);
+
+        } else {
+          let d1 = new Date(lastModified);
+          let dataModifiedOn = d1.toLocaleString();
+          console.log('Case modified on: ', dataModifiedOn);
+          $("#case-footer").html('Case Id: ' + data.cases.caseId + ' Sequence: ' + data.cases.seq + '<br>' + 'Case modified on: ' + dataModifiedOn);
+        }
+
         // store the case sequence number in local storage
         localStorage.setItem('caseIdSeqNum', data.cases.seq);
         localStorage.setItem(curCaseSeqNum, null); // initializing case modified time to null
+
       } else{
         console.log("cases: ", data.cases, " Mark DONE");
+        $("#case-quote").html('Done with Cases...');
+        $("#case-footer").html('');
         $("#btn-next").attr('disabled', true);
         $("#done-cond").show();
         $("#card-done-id").html('<a href="#" id="log-out-id" class="log-out-class">You are Done. Click to log out</a>');
@@ -216,6 +252,7 @@ $(document).ready(function(){
 
   //=======================================================================
   // TODO: Can expand the functionality to include a prev Button
+  //       This can be a good feature for future extension
   //=======================================================================
   //$("#btn-prev").click(function(){
     //listId = localStorage.getItem('listId');
@@ -268,11 +305,9 @@ $(document).ready(function(){
     $("#case-cond").hide();
     $("#done-cond").hide();
     $("#signupbox").hide();
-    //$(".container").show();
     $("#signupbox").hide();
     $("#login-result-id").hide();
     $(".container").show();
-    //$('#loginbox').show();
     $("#login-username").val('');
     $("#login-password").val('');
   });

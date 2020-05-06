@@ -179,10 +179,19 @@ app.post("/api/nextcase", (request, response) => {
     const curSeq = parseInt(request.body.curSeq, 10);
     const curCond = request.body.curCond;
     const nextSeq = curSeq + 1;
+    let modDate = request.body.modifiedOn;
+    
+    let queryStr = {"seq" : nextSeq};
     let curQuery = {"seq" : curSeq};
     let newValues = { $set: {code: curCond} };
-    let queryStr = {"seq" : nextSeq};
-    console.log('curSeq: ', curSeq, 'curCond:', curCond, 'nextSeq: ', nextSeq);
+    if (modDate) {
+      modDate = parseInt(modDate, 10);
+      console.log('modDate found...', modDate, typeof modDate)
+      newValues = { $set: {code: curCond, lastModified: modDate} };
+    }
+
+    console.log('curSeq: ', curSeq, 'curCond:', curCond, 'nextSeq: ', nextSeq, 'modDate: ', modDate, typeof modDate);
+    console.log('update with: ', newValues);
 
     let queries = [
         collectionCases.updateOne(curQuery, newValues),
