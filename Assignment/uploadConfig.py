@@ -1,11 +1,4 @@
-# LOG:
-LOG_DIR = 'logs'
-LOG_FILE = "logs/mongoUpload.log"
-
-# USER:
-USERID = 'admin'
-PASSWD = 'admin2020'
-
+# GLOBAL CONFIG VARIABLES
 # SEQUENCE
 SEQ = 1
 
@@ -16,3 +9,12 @@ PORT   = '27017'
 CONDITION_FILE = 'conditions.csv'
 CASES_DIR = 'cases'
 SEQUENCE_START = 0
+
+# LOG: FOR FUTURE
+#LOG_DIR = 'logs'
+#LOG_FILE = "logs/mongoUpload.log"
+
+
+# Timezone
+import pytz
+TZ = pytz.timezone('US/Pacific')

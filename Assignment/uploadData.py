@@ -3,14 +3,13 @@ from pymongo import MongoClient
 from pprint import pprint
 import json
 from datetime import datetime
+import pytz
 import math
 import os
 import glob
-import bcrypt
 from uploadConfig import *
 
-#import logging
-
+#import logging # THIS CAN BE ENABLED LATER. Provision created
 
 class accessDB:
     def __init__(self):
@@ -20,7 +19,7 @@ class accessDB:
         self.sequence_start = SEQUENCE_START
         self.seq = SEQ
         print('seq init: {}'.format(self.seq))
-        self.logger = None
+        #self.logger = None
         self.conditionFile = CONDITION_FILE
         self.client = MongoClient('mongodb://' + self.host + ':' + str(self.port) + '/')
         self.db = self.client[self.dbName]
@@ -34,24 +33,23 @@ class accessDB:
     #-------------------------------------------------------------
     # function to create necessary directories
     # log file is not used now. Will be used in production
+    # FOR FUTURE
     #-------------------------------------------------------------
-    def checkAndCreateDirs(self):
-        if not os.path.isdir(LOG_DIR):
-            print('log dir: {} does not exist. Creating it'.format(LOG_DIR))
-            os.mkdir(LOG_DIR)
-        else:
-            print('log dir: {} exists'.format(LOG_DIR))
+    #def checkAndCreateDirs(self):
+        #if not os.path.isdir(LOG_DIR):
+            #print('log dir: {} does not exist. Creating it'.format(LOG_DIR))
+            #os.mkdir(LOG_DIR)
+        #else:
+            #print('log dir: {} exists'.format(LOG_DIR))
 
-        if not os.path.isfile(LOG_FILE):
-            print('log file: {} does not exist. Creating it'.format(LOG_FILE))
+        #if not os.path.isfile(LOG_FILE):
+            #print('log file: {} does not exist. Creating it'.format(LOG_FILE))
             # Creates a new empty file
-            with open(LOG_FILE, 'w') as fp:
-                pass
-        else:
-            print('log file: {} exists'.format(LOG_FILE))
+            #with open(LOG_FILE, 'w') as fp:
+                #pass
+        #else:
+            #print('log file: {} exists'.format(LOG_FILE))
 
-        #logging.basicConfig(filename=LOG_FILE, filemode='a', level=logging.DEBUG)
-        #self.logger = logging.getLogger(__name__)
 
 
     #-------------------------------------------------------------
@@ -63,23 +61,20 @@ class accessDB:
             next(rd) # skip the header line
 
             # Using a timestamp and sequence number to make the 'id' unique
-            sequence_num = self.sequence_start * 0.000001 # in microseconds
+            sequence_num = self.sequence_start
 
             for row in rd:
                 d = {}
                 #print('{} : {}'.format(row[0], row[1]))
-                timeL = str(datetime.utcnow().timestamp()).split('.')
-                timeL[1] = str(float('0.' + timeL[1]) + sequence_num)
-                curTime = float(timeL[0]) + float(timeL[1])
+                timeL = str(datetime.now().timestamp() * 1000).split('.') # milliseconds
+                curTime = float(timeL[0]) + sequence_num
                 d['condId'] = curTime
                 d['code']   = row[0]
                 d['desc']   = row[1]
-                d['lastModified'] = curTime
+                d['lastModified'] = -1 #initialized
                 self.condList.append(d)
 
-                sequence_num += 0.000001
-                #sequence_num = float(format(sequence_num, '.6f'))
-                #print('sequence_num = {}'.format(sequence_num))
+                sequence_num += 1
 
         #for item in self.condList:
             #print('{}'.format(item))
@@ -125,10 +120,9 @@ class accessDB:
                 # or Update the record if the description has changed
                 elif ret['desc'] != item['desc']:
                     print('Update this record: {}'.format(item))
-                    sequence_num = self.sequence_start * 0.000001 # in microseconds
-                    timeL = str(datetime.utcnow().timestamp()).split('.')
-                    timeL[1] = str(float('0.' + timeL[1]) + sequence_num)
-                    modTime = float(timeL[0]) + float(timeL[1])
+                    sequence_num = self.sequence_start
+                    timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+                    modTime = float(timeL[0]) + sequence_num
 
                     query = { "code": ret['code'] }
                     newvalues = { "$set": { "desc": item['desc'], "lastModified":  modTime} }
@@ -148,7 +142,7 @@ class accessDB:
         fileList = glob.glob(CASES_DIR+"/*.txt")
         print('fileList: {}'.format(fileList))
 
-        sequence_num = self.sequence_start * 0.000001 # in microseconds
+        sequence_num = self.sequence_start
         for fileName in fileList:
             with open (fileName, "r") as f:
                 data = f.read()
@@ -169,30 +163,28 @@ class accessDB:
                 # Insert the record if not found
                 if not ret:
                     print('Insert the record from file: {}'.format(fileName))
-                    timeL = str(datetime.utcnow().timestamp()).split('.')
-                    timeL[1] = str(float('0.' + timeL[1]) + sequence_num)
-                    curTime = float(timeL[0]) + float(timeL[1])
+                    timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+                    curTime = float(timeL[0]) + sequence_num
                     d = {}
                     d['caseId']   = curTime
                     d['seq']      = self.seq
                     d['fileName'] = fileName
                     d['caseDesc'] = data
                     d['code']   = '-1' # relates to the condition
-                    d['lastModified']  = curTime
+                    d['lastModified']  = -1 #initialize to -1
                     try:
                         ret2 = self.caseColl.insert_one(d)
                     except:
                         print('Failed to insert case from file: {}'.format(fileName))
                         exit(0)
 
-                    sequence_num += 0.000001
+                    sequence_num += 1
 
                 elif ret['caseDesc'] != data:
                     print('Update the case desc from file: {}'.format(fileName))
-                    sequence_num = self.sequence_start * 0.000001 # in microseconds
-                    timeL = str(datetime.utcnow().timestamp()).split('.')
-                    timeL[1] = str(float('0.' + timeL[1]) + sequence_num)
-                    modTime = float(timeL[0]) + float(timeL[1])
+                    sequence_num = self.sequence_start
+                    timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+                    modTime = float(timeL[0]) + sequence_num
 
                     query = { "fileName": ret['fileName'] }
                     newvalues = { "$set": { "caseDesc": data, "lastModified":  modTime} }
@@ -208,42 +200,6 @@ class accessDB:
                     newseq = self.seq + 1
                     self.updateSequence(newseq)
 
-    #-------------------------------------------------
-    # function to create an admin user in MongoDB
-    #-------------------------------------------------
-    def createUser(self):
-        print('Create an user admin if it does not exist')
-        # Insert or update records
-        queryStr = {"userId" : USERID}
-        ret = None
-        sequence_num = self.sequence_start * 0.000001 # in microseconds
-        try:
-            ret = self.userColl.find_one(queryStr)
-            #if ret: print('RET: {} {} {}'.format(ret['condId'], ret['code'], ret['desc']))
-        except:
-            print('find error: {}'.format(queryStr))
-            exit(0)
-
-        # Insert the user record if not found
-        if not ret:
-            print('Insert the user record')
-            salt = bcrypt.gensalt()
-            passwd = bytes(PASSWD, 'utf-8')
-            hashed = bcrypt.hashpw(passwd, salt)
-
-            timeL = str(datetime.utcnow().timestamp()).split('.')
-            timeL[1] = str(float('0.' + timeL[1]) + sequence_num)
-            curTime = float(timeL[0]) + float(timeL[1])
-            d = {}
-            d['id']       = curTime
-            d['userId']   = USERID
-            d['passwd']   = hashed
-            d['lastModified']  = curTime
-            try:
-                ret = self.userColl.insert_one(d)
-            except:
-                print('Failed to insert user record')
-                exit(0)
 
 
     #-------------------------------------------------
@@ -254,7 +210,7 @@ class accessDB:
         # Insert or update records
         queryStr = {"seq" : self.seq}
         ret = None
-        sequence_num = self.sequence_start * 0.000001 # in microseconds
+        sequence_num = self.sequence_start #* 0.000001 # in microseconds
         try:
             ret = self.seqColl.find_one(queryStr)
             #if ret: print('RET: {} {} {}'.format(ret['condId'], ret['code'], ret['desc']))
@@ -266,12 +222,12 @@ class accessDB:
         if not ret:
             print('Insert the sequence record')
 
-            timeL = str(datetime.utcnow().timestamp()).split('.')
-            timeL[1] = str(float('0.' + timeL[1]) + sequence_num)
-            curTime = float(timeL[0]) + float(timeL[1])
+            timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+            curTime = float(timeL[0]) + sequence_num
             d = {}
             d['id']       = curTime
             d['seq']      = self.seq
+            d['lastModified'] = -1
             try:
                 ret = self.seqColl.insert_one(d)
             except:
@@ -286,14 +242,14 @@ class accessDB:
 
 
     #-------------------------------------------------
-    # function to update sequence  n MongoDB
+    # function to update sequence in MongoDB
     #-------------------------------------------------
     def updateSequence(self, seq):
         print('Update sequence id to: {}'.format(self.seq))
         # Insert or update records
         queryStr = {"seq" : self.seq}
         ret = None
-        sequence_num = self.sequence_start * 0.000001 # in microseconds
+        sequence_num = self.sequence_start
         try:
             ret = self.seqColl.find_one(queryStr)
             #if ret: print('RET: {} {} {}'.format(ret['condId'], ret['code'], ret['desc']))
@@ -309,10 +265,9 @@ class accessDB:
         else:
             ret2 = None
             print('Update the seq with : {}'.format(seq))
-            sequence_num = self.sequence_start * 0.000001 # in microseconds
-            timeL = str(datetime.utcnow().timestamp()).split('.')
-            timeL[1] = str(float('0.' + timeL[1]) + sequence_num)
-            modTime = float(timeL[0]) + float(timeL[1])
+            sequence_num = self.sequence_start
+            timeL = str(datetime.now(tz=TZ).timestamp() * 1000).split('.') # milliseconds
+            modTime = float(timeL[0]) + sequence_num
 
             query = { "seq": self.seq }
             newvalues = { "$set": { "seq": seq, "lastModified":  modTime} }
@@ -337,11 +292,8 @@ if __name__ == '__main__':
     ad = accessDB()
     print('db: {} host: {} port: {}'.format(ad.dbName, ad.host, ad.port))
 
-    # create log directory and log file - not used now.
-    ad.checkAndCreateDirs()
-
-    # create an admin user - create user from signup page
-    #ad.createUser()
+    # create log directory and log file - not used now. FOR FUTURE
+    #ad.checkAndCreateDirs()
 
     # create a global sequence
     ad.createSequence()
