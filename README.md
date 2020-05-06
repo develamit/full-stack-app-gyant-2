@@ -76,7 +76,7 @@ to see the complete full-stack application in motion
 
   3. Sign Up can be done from the front end. Also validates - if the userId exists or not.
 
-  4. Login from front end Also validates for - invalid user, incorrect password
+  4. Login from front end. Also validates for - invalid user, incorrect password
 
   5. Passwords are stored encrypted using bcrypt and salt.
 
@@ -84,7 +84,7 @@ to see the complete full-stack application in motion
 
   7. When a case is assigned a condition, the code of the condition is stored in the "cases" collection for the corresponding case sequence. Later, when the case is revisited, it will get the persisted condition and show the corresponding condition as selected. The user can always edit the condition and assign a new code to the case
 
-  8. The case also displays the following on the "footer" section
-    * Unique caseId
-    * Created on date and time Or Last modified date and time. All times are reported in PDT
-    * Case sequence number
+  8. The case also displays the following on the "footer" section:
+    - Unique caseId
+    - Created on date and time Or Last modified date and time. All times are reported in PDT
+    - Case sequence number
