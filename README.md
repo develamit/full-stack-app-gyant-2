@@ -88,5 +88,5 @@ to see the complete full-stack application in motion
   ```
     - Unique caseId
     - Created on date and time Or Last modified date and time. All times are reported in PDT
-    - Case sequence number
+    - Case sequence number 
   ```
